@@ -6,7 +6,7 @@ RUN apk add --no-cache xvfb font-noto python3
 WORKDIR /app
 
 # Copy file giả lập và file game vào container
-COPY microemulator.jar microemulator.jar
+COPY ZMicroPro.jar ZMicroPro.jar
 COPY app.jar app.jar
 
 # Chạy Python Web Server giả mở PORT + Chạy MicroEmu qua màn hình ảo Xvfb
