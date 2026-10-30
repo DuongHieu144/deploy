@@ -1,13 +1,17 @@
 FROM eclipse-temurin:17-jre-alpine
 
-# Cài đặt Xvfb (màn hình ảo), font chữ cho AWT và python3 để giữ Port cho Render
+# Cài đặt Xvfb, font chữ và python3
 RUN apk add --no-cache xvfb font-noto python3
 
 WORKDIR /app
 
-# Copy file giả lập và file game vào container
 COPY ZMicroPro.jar ZMicroPro.jar
 COPY app.jar app.jar
 
-# Chạy Python Web Server giả mở PORT + Chạy MicroEmu qua màn hình ảo Xvfb
-CMD python3 -m http.server ${PORT:-10000} & xvfb-run -a java -jar ZMicroPro.jar app.jar
+# Khai báo màn hình ảo màn định
+ENV DISPLAY=:99
+
+# 1. Chạy Python HTTP server giữ PORT cho Render
+# 2. Khởi chạy màn hình ảo Xvfb ngầm (:99)
+# 3. Đợi 1 giây cho Xvfb khởi tạo xong rồi chạy Java MicroEmulator
+CMD python3 -m http.server ${PORT:-10000} & Xvfb :99 -screen 0 1024x768x16 & sleep 1 && java -jar ZMicroPro.jar app.jar
